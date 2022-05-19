@@ -2,11 +2,26 @@
 <!-- http://localhost:3000/isolated/exercise/04.html -->
 
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@18.1.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18.1.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.12.4/babel.js"></script>
-  <script type="text/babel">
+  <div id="root1"></div>
+  <div id="root2"></div>
+  <div id="root3"></div>
+  <div id="root4"></div>
+  <div id="root5"></div>
+  <div id="root6"></div>
+<!--  <script src="https://unpkg.com/react@18.1.0/umd/react.development.js"></script>-->
+  <script src="/assets/react.development.js"></script>
+<!--  <script src="https://unpkg.com/react-dom@18.1.0/umd/react-dom.development.js"></script>-->
+  <script src="/assets/react-dom.development.js"></script>
+<!--  <script src="https://unpkg.com/@babel/standalone@7.12.4/babel.js"></script>-->
+  <script src="/assets/babel.js"></script>
+
+  <script src="/assets/prop-types.js"></script>
+
+  <script type="text/babel" data-type="module">
+
+    // import React from 'react/umd/react.development';
+    // import ReactDOM from 'react-dom/umd/react-dom.development';
+
     // 🐨 Make a function called `message` which returns the JSX we want to share
 
     // 🐨 use that function in place of the divs below with:
@@ -19,6 +34,71 @@
     )
 
     // 💯 This is only the first step to making actual React components. The rest is in the extra credit!
-    ReactDOM.createRoot(document.getElementById('root')).render(element)
+    // ReactDOM.createRoot(document.getElementById('root')).render(element)
+
+
+
+    const Message = ({children}) => {
+
+      return <div className="message">{children || "message here"}</div>
+
+    }
+
+
+    ReactDOM.createRoot(document.getElementById('root1')).render(
+            <div>
+              {Message({
+                children: 'function call'
+              })}
+            </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('root2')).render(
+            <div className="container">
+              <Message children="Hello World" />
+              <Message children="Goodbye World" />
+            </div>
+    );
+
+
+    ReactDOM.createRoot(document.getElementById('root3')).render(
+            <div className="container">
+              {React.createElement(Message,{children: 'React.createElement'})}
+            </div>
+    );
+
+    const Message2  = ({subject, greeting }) => {
+      return <div className="message">{`${greeting}, ${subject}`}</div>
+    }
+
+    const PropType = {
+      string(props, propName, componentName){
+        console.log(props);
+        if(typeof props[propName] !== 'string'){
+          return new Error('Please pass a string instead');
+        }
+        if( props[propName].length < 1){
+          return new Error('Please pass a non empty string');
+        }
+      }
+    }
+
+    Message2.propTypes = {
+      subject: PropTypes.string,
+      greeting: PropTypes.string.isRequired
+    }
+
+    ReactDOM.createRoot(document.getElementById('root4')).render(
+
+          <Message2 subject="Paul" greeting="Bye" ></Message2>
+
+    )
+
+    ReactDOM.createRoot(document.getElementById('root5')).render(
+          <>
+            <Message/>
+          </>
+    );
+
   </script>
 </body>
