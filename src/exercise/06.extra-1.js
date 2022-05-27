@@ -3,6 +3,7 @@
 
 import * as React from 'react'
 import '../global-isolated.css'
+import * as path from "path";
 
 function UsernameForm({onSubmitUsername}) {
   // 🐨 add a submit event handler here (`handleSubmit`).
@@ -24,22 +25,16 @@ function UsernameForm({onSubmitUsername}) {
 
     const handleSubmit = (e)=> {
         e.preventDefault();
-        console.log(e.target.elements[0].value);
-        console.log(e.target.elements.username.value);
-        console.dir(e.target.elements);
-
-        /* DONT USE THE FOLLOWINGS it's not reliable and test fails */
-        // console.log(e.target[0].value);
-        // console.log(e.target.username.value);
-
-        onSubmitUsername(e.target.elements.username.value);
+        onSubmitUsername(refUsername.current.value);
     }
 
+    const refUsername = React.useRef(null);
+
     return (
-    <form onSubmit={handleSubmit}>
+    <form className={__filename} onSubmit={handleSubmit}>
       <div>
         <label htmlFor="username">Username:</label>
-        <input type="text" id="username" />
+        <input ref={refUsername} type="text" id="username" />
       </div>
       <button type="submit">Submit</button>
     </form>
