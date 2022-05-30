@@ -11,7 +11,8 @@ type PropsErrorMsg = {
 type PropsInputElem = {
     sInputName: string,
     sErrorMsg: string,
-    oRef: React.MutableRefObject<HTMLInputElement>
+    oRef: React.MutableRefObject<HTMLInputElement>,
+    setFormValidState: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type onSubmitUsername = (username: string) => void;
@@ -31,13 +32,20 @@ function ShowErrorMsg( {sMsg}:PropsErrorMsg ){
     return jMarkup;
 }
 
-function InputTextElem({sInputName, sErrorMsg,oRef}:PropsInputElem){
+function InputTextElem({sInputName, sErrorMsg,oRef,setFormValidState}:PropsInputElem){
 
     const [error, setError] = React.useState<string>('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
-        setError(e.target.value === e.target.value.toLowerCase() ? '' : sErrorMsg)
+        if( e.target.value === e.target.value.toLowerCase() ){
+            setError('');
+            setFormValidState(true);
+        } else {
+            setError(sErrorMsg);
+            setFormValidState(false)
+        }
+
     }
 
     return (
@@ -74,12 +82,14 @@ function UsernameForm({onSubmitUsername}:{onSubmitUsername: onSubmitUsername}) {
 
     const refUsername = React.useRef<HTMLInputElement>(null!);
 
+    const [valid, setValid] = React.useState<boolean>(true)
+
     return (
     <form className={__filename} onSubmit={handleSubmit}>
 
-        <InputTextElem oRef={refUsername} sErrorMsg='Solo lettere minuscole!' sInputName='username'></InputTextElem>
+        <InputTextElem setFormValidState={setValid} oRef={refUsername} sErrorMsg='only lower case input!' sInputName='username'></InputTextElem>
 
-        <button type="submit">Submit</button>
+        <button disabled={!valid} type="submit">Submit</button>
     </form>
     )
 }
