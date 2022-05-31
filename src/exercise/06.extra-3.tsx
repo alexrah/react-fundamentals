@@ -10,49 +10,26 @@ type PropsErrorMsg = {
 
 type PropsInputElem = {
     sInputName: string,
-    sErrorMsg: string,
     oRef: React.MutableRefObject<HTMLInputElement>,
-    setFormValidState: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type onSubmitUsername = (username: string) => void;
 
-function ShowErrorMsg( {sMsg}:PropsErrorMsg ){
 
-    let jMarkup:React.ReactElement = <></>;
+function InputTextElem({sInputName, oRef}:PropsInputElem){
 
-    if(sMsg){
-        jMarkup = (
-            <div>
-                <h5 className='error' role='alert'>{sMsg}</h5>
-            </div>
-        )
-    }
-
-    return jMarkup;
-}
-
-function InputTextElem({sInputName, sErrorMsg,oRef,setFormValidState}:PropsInputElem){
-
-    const [error, setError] = React.useState<string>('');
+    const [username, setUsername] = React.useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
-        if( e.target.value === e.target.value.toLowerCase() ){
-            setError('');
-            setFormValidState(true);
-        } else {
-            setError(sErrorMsg);
-            setFormValidState(false)
-        }
+        setUsername(e.target.value.toLowerCase());
 
     }
 
     return (
         <div>
             <label htmlFor="username">Username:</label>
-            <input onChange={handleChange} ref={oRef} type="text" id={sInputName} />
-            <ShowErrorMsg sMsg={error}></ShowErrorMsg>
+            <input onChange={handleChange} value={username} ref={oRef} type="text" id={sInputName} />
         </div>
     )
 
@@ -82,14 +59,13 @@ function UsernameForm({onSubmitUsername}:{onSubmitUsername: onSubmitUsername}) {
 
     const refUsername = React.useRef<HTMLInputElement>(null!);
 
-    const [valid, setValid] = React.useState<boolean>(true)
 
     return (
     <form className={__filename} onSubmit={handleSubmit}>
 
-        <InputTextElem setFormValidState={setValid} oRef={refUsername} sErrorMsg='only lower case input!' sInputName='username'></InputTextElem>
+        <InputTextElem oRef={refUsername} sInputName='username'></InputTextElem>
 
-        <button disabled={!valid} type="submit">Submit</button>
+        <button type="submit">Submit</button>
     </form>
     )
 }
